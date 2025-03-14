@@ -12,34 +12,32 @@ function Square({ value, onSquareClick }) {
   );
 }
 
-function Board({ xIsNext, squares, onPlay }) {
+export default function Board() {
+  const [xIsNext, setXIsNext] = useState(true);
+  const [squares, setSquares] = useState(Array(9).fill(null));
+
   function handleClick(i) {
-    // If square is already filled or there's a winner, do nothing
-    if (squares[i] || calculateWinner(squares)) {
+    if (calculateWinner(squares) || squares[i]) {
       return;
     }
-    
-    // Create a copy of the squares array
     const nextSquares = squares.slice();
-    
-    // Set the value based on whose turn it is
-    nextSquares[i] = xIsNext ? 'X' : 'O';
-    
-    // Call the onPlay callback with the updated squares
-    onPlay(nextSquares);
+  if (xIsNext) {
+    nextSquares[i] = 'X';
+    } else {
+    nextSquares[i] = 'O';
+    }
+    setSquares(nextSquares);
+    setXIsNext(!xIsNext);
   }
-  
-  // Determine game status
+
   const winner = calculateWinner(squares);
   let status;
-  if (winner) {
+    if (winner) {
     status = 'Winner: ' + winner;
-  } else if (squares.every(square => square !== null)) {
-    status = 'Draw: Game Over';
-  } else {
+    } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
-  }
-  
+    }
+
   return (
     <>
       <div className="status">{status}</div>
@@ -84,6 +82,7 @@ function calculateWinner(squares) {
   return null;
 }
 
+/*
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
@@ -125,3 +124,4 @@ export default function Game() {
     </div>
   );
 }
+*/
